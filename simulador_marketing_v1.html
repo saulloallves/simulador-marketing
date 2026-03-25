@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Marketing — Cresci e Perdi</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #2d6a4f;
+  --verde-claro: #52b788;
+  --verde-neon: #40c97a;
+  --amarelo: #f4a261;
+  --vermelho: #e63946;
+  --escuro: #0d1117;
+  --escuro2: #161b22;
+  --escuro3: #21262d;
+  --borda: #30363d;
+  --texto: #e6edf3;
+  --texto2: #8b949e;
+  --branco: #f0f6fc;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--escuro);
+  color: var(--texto);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── TELA INICIAL ─────────────────────────────── */
+#tela-inicio {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+}
+
+#tela-inicio::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(45,106,79,.25) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(82,183,136,.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.inicio-card {
+  background: var(--escuro2);
+  border: 1px solid var(--borda);
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.inicio-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--verde), var(--verde-neon), var(--amarelo));
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2.5rem;
+}
+
+.logo-icon {
+  width: 44px; height: 44px;
+  background: var(--verde);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+}
+
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--branco);
+  line-height: 1.2;
+}
+
+.logo-text span {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: .72rem;
+  color: var(--texto2);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.inicio-card h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: .75rem;
+  background: linear-gradient(135deg, var(--branco) 40%, var(--verde-claro));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.inicio-card p {
+  color: var(--texto2);
+  font-size: .95rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: 2rem;
+}
+
+.info-item {
+  background: var(--escuro3);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: .9rem 1rem;
+}
+
+.info-item .label {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--texto2);
+  margin-bottom: .25rem;
+}
+
+.info-item .valor {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--branco);
+}
+
+.campo-grupo { margin-bottom: 1rem; }
+.campo-grupo label {
+  display: block;
+  font-size: .75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--texto2);
+  margin-bottom: .5rem;
+}
+.campo-grupo input {
+  width: 100%;
+  padding: .85rem 1rem;
+  background: var(--escuro3);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  color: var(--texto);
+  outline: none;
+  transition: border-color .2s;
+}
+.campo-grupo input:focus { border-color: var(--verde-claro); }
+.campo-grupo input::placeholder { color: var(--texto2); }
+
+.btn-comecar {
+  width: 100%;
+  padding: 1rem;
+  background: var(--verde);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .03em;
+  transition: all .2s;
+  margin-top: .5rem;
+}
+.btn-comecar:hover { background: #1e4d38; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,106,79,.4); }
+
+.erro-msg { color: var(--vermelho); font-size: .82rem; margin-top: .4rem; display: none; }
+
+/* ── TELA SIMULADOR ───────────────────────────── */
+#tela-simulador { display: none; min-height: 100vh; }
+
+.sim-header {
+  background: var(--escuro2);
+  border-bottom: 1px solid var(--borda);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sim-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.sim-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--verde-claro);
+}
+
+.sim-usuario {
+  font-size: .82rem;
+  color: var(--texto2);
+}
+
+.sim-usuario strong { color: var(--texto); }
+
+.sim-progresso-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sim-caso-label {
+  font-size: .8rem;
+  color: var(--texto2);
+  white-space: nowrap;
+}
+
+.sim-caso-label strong {
+  color: var(--verde-neon);
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+}
+
+.barra-topo {
+  height: 3px;
+  background: var(--escuro3);
+}
+
+.barra-topo-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--verde), var(--verde-neon));
+  transition: width .5s ease;
+}
+
+/* ── LAYOUT DO SIMULADOR ─────────────────────── */
+.sim-body {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: calc(100vh - 61px);
+}
+
+/* Painel esquerdo: chat */
+.painel-chat {
+  border-right: 1px solid var(--borda);
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-topbar {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--borda);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.franqueado-avatar {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--verde), var(--verde-claro));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: .9rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.franqueado-info .nome {
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--branco);
+}
+
+.franqueado-info .cidade {
+  font-size: .75rem;
+  color: var(--texto2);
+}
+
+.status-badge {
+  margin-left: auto;
+  background: rgba(64,201,122,.15);
+  color: var(--verde-neon);
+  border: 1px solid rgba(64,201,122,.3);
+  border-radius: 100px;
+  padding: .2rem .7rem;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+
+.chat-mensagens {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 300px;
+  max-height: 420px;
+}
+
+.msg {
+  display: flex;
+  gap: .75rem;
+  animation: fadeSlide .3s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg.franqueado { align-items: flex-start; }
+.msg.sistema { align-items: flex-start; flex-direction: row-reverse; }
+.msg.sistema .msg-avatar { background: var(--verde); }
+
+.msg-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--escuro3);
+  border: 1px solid var(--borda);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--branco);
+}
+
+.msg-balao {
+  background: var(--escuro3);
+  border: 1px solid var(--borda);
+  border-radius: 0 14px 14px 14px;
+  padding: .75rem 1rem;
+  max-width: 85%;
+  font-size: .88rem;
+  line-height: 1.55;
+  color: var(--texto);
+}
+
+.msg.sistema .msg-balao {
+  background: rgba(45,106,79,.2);
+  border-color: rgba(82,183,136,.3);
+  border-radius: 14px 0 14px 14px;
+  color: var(--verde-claro);
+}
+
+.msg-hora {
+  font-size: .65rem;
+  color: var(--texto2);
+  margin-top: .3rem;
+}
+
+.digitando {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: .6rem .8rem;
+}
+
+.digitando span {
+  width: 6px; height: 6px;
+  background: var(--texto2);
+  border-radius: 50%;
+  animation: bounce .9s infinite;
+}
+
+.digitando span:nth-child(2) { animation-delay: .15s; }
+.digitando span:nth-child(3) { animation-delay: .3s; }
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+}
+
+/* Painel direito: decisão */
+.painel-decisao {
+  display: flex;
+  flex-direction: column;
+  background: var(--escuro2);
+}
+
+.decisao-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--borda);
+}
+
+.fase-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(244,162,97,.12);
+  border: 1px solid rgba(244,162,97,.3);
+  color: var(--amarelo);
+  border-radius: 100px;
+  padding: .25rem .75rem;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+
+.decisao-titulo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--branco);
+  margin-bottom: .4rem;
+}
+
+.decisao-sub {
+  font-size: .8rem;
+  color: var(--texto2);
+  line-height: 1.5;
+}
+
+.decisao-corpo {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+}
+
+.opcoes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.opcao-btn {
+  width: 100%;
+  text-align: left;
+  background: var(--escuro3);
+  border: 1.5px solid var(--borda);
+  border-radius: 12px;
+  padding: .85rem 1rem;
+  color: var(--texto);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+}
+
+.opcao-btn:hover:not(:disabled) {
+  border-color: var(--verde-claro);
+  background: rgba(82,183,136,.07);
+}
+
+.opcao-letra {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  background: var(--escuro);
+  border: 1.5px solid var(--borda);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: .72rem;
+  color: var(--texto2);
+  flex-shrink: 0;
+  transition: all .2s;
+}
+
+.opcao-btn:hover:not(:disabled) .opcao-letra {
+  border-color: var(--verde-claro);
+  color: var(--verde-claro);
+}
+
+.opcao-btn.certa {
+  border-color: var(--verde-neon) !important;
+  background: rgba(64,201,122,.1) !important;
+}
+
+.opcao-btn.certa .opcao-letra {
+  background: var(--verde-neon);
+  border-color: var(--verde-neon);
+  color: #0d1117;
+}
+
+.opcao-btn.errada {
+  border-color: var(--vermelho) !important;
+  background: rgba(230,57,70,.08) !important;
+}
+
+.opcao-btn.errada .opcao-letra {
+  background: var(--vermelho);
+  border-color: var(--vermelho);
+  color: white;
+}
+
+.opcao-btn.mostrar-certa {
+  border-color: var(--verde-neon) !important;
+  background: rgba(64,201,122,.06) !important;
+}
+
+.opcao-btn.mostrar-certa .opcao-letra {
+  border-color: var(--verde-neon);
+  color: var(--verde-neon);
+}
+
+.opcao-btn:disabled { cursor: default; }
+
+/* Feedback box */
+.feedback-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid;
+  font-size: .82rem;
+  line-height: 1.6;
+  display: none;
+  animation: fadeSlide .3s ease;
+}
+
+.feedback-box.certo {
+  background: rgba(64,201,122,.08);
+  border-color: rgba(64,201,122,.3);
+  color: #6ee7a0;
+}
+
+.feedback-box.errado {
+  background: rgba(230,57,70,.08);
+  border-color: rgba(230,57,70,.3);
+  color: #f87171;
+}
+
+.feedback-titulo {
+  font-weight: 700;
+  margin-bottom: .35rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+/* Pontuação inline */
+.pontos-flash {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .8rem;
+  padding: .2rem .6rem;
+  border-radius: 100px;
+  margin-left: .5rem;
+}
+
+.pontos-flash.mais { background: rgba(64,201,122,.2); color: var(--verde-neon); }
+.pontos-flash.zero { background: rgba(230,57,70,.2); color: #f87171; }
+
+/* Botão próximo */
+.btn-proximo {
+  margin: 1rem 1.5rem 1.5rem;
+  width: calc(100% - 3rem);
+  padding: .85rem;
+  background: var(--verde);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: all .2s;
+  display: none;
+}
+
+.btn-proximo:hover { background: #1e4d38; }
+
+/* Placar lateral */
+.placar-row {
+  padding: .75rem 1.5rem;
+  border-top: 1px solid var(--borda);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.placar-item { text-align: center; }
+.placar-item .num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.placar-item .num.verde { color: var(--verde-neon); }
+.placar-item .num.vermelho { color: var(--vermelho); }
+.placar-item .num.amarelo { color: var(--amarelo); }
+
+.placar-item .lab {
+  font-size: .65rem;
+  color: var(--texto2);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-top: 2px;
+}
+
+/* ── TELA RESULTADO ───────────────────────────── */
+#tela-resultado { display: none; min-height: 100vh; }
+
+.resultado-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.resultado-wrap::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 0%, rgba(45,106,79,.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.resultado-card {
+  background: var(--escuro2);
+  border: 1px solid var(--borda);
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 640px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.resultado-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--verde), var(--verde-neon), var(--amarelo));
+}
+
+.resultado-icone { font-size: 3.5rem; margin-bottom: 1rem; text-align: center; }
+
+.resultado-card h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: .5rem;
+  background: linear-gradient(135deg, var(--branco), var(--verde-claro));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.resultado-sub {
+  text-align: center;
+  color: var(--texto2);
+  font-size: .9rem;
+  margin-bottom: 2rem;
+}
+
+.nota-grande {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 4.5rem;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: .5rem;
+}
+
+.nota-grande.aprovado { color: var(--verde-neon); }
+.nota-grande.medio { color: var(--amarelo); }
+.nota-grande.reprovado { color: var(--vermelho); }
+
+.status-pill-res {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.status-pill-res span {
+  padding: .35rem 1.2rem;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .04em;
+}
+
+.status-pill-res span.aprovado { background: rgba(64,201,122,.15); color: var(--verde-neon); border: 1px solid rgba(64,201,122,.3); }
+.status-pill-res span.medio { background: rgba(244,162,97,.15); color: var(--amarelo); border: 1px solid rgba(244,162,97,.3); }
+.status-pill-res span.reprovado { background: rgba(230,57,70,.15); color: #f87171; border: 1px solid rgba(230,57,70,.3); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  background: var(--escuro3);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-item .num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--branco);
+}
+
+.stat-item .lab {
+  font-size: .7rem;
+  color: var(--texto2);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-top: 4px;
+}
+
+/* Breakdown por caso */
+.breakdown {
+  background: var(--escuro3);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.breakdown h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .85rem;
+  color: var(--texto2);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 1rem;
+}
+
+.caso-linha {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .6rem;
+}
+
+.caso-linha:last-child { margin-bottom: 0; }
+
+.caso-nome {
+  font-size: .82rem;
+  color: var(--texto);
+  flex: 1;
+}
+
+.caso-stars {
+  display: flex;
+  gap: 3px;
+}
+
+.star {
+  width: 14px; height: 14px;
+  border-radius: 3px;
+}
+
+.star.cheia { background: var(--verde-neon); }
+.star.vazia { background: var(--escuro); border: 1px solid var(--borda); }
+
+.pontos-caso {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .8rem;
+  color: var(--texto2);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Mensagem gestor */
+.msg-gestor {
+  background: rgba(45,106,79,.12);
+  border: 1px solid rgba(82,183,136,.2);
+  border-radius: 14px;
+  padding: 1.25rem;
+  font-size: .85rem;
+  line-height: 1.65;
+  color: var(--verde-claro);
+  margin-bottom: 1.5rem;
+}
+
+.msg-gestor strong { color: var(--branco); }
+
+.btn-finalizar-res {
+  width: 100%;
+  padding: .9rem;
+  background: var(--verde);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.btn-finalizar-res:hover { background: #1e4d38; }
+
+@media (max-width: 768px) {
+  .sim-body { grid-template-columns: 1fr; }
+  .painel-chat { border-right: none; border-bottom: 1px solid var(--borda); }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     TELA 1 — IDENTIFICAÇÃO
+══════════════════════════════════════════════ -->
+<div id="tela-inicio">
+  <div class="inicio-card">
+    <div class="logo-row">
+      <div class="logo-icon">👕</div>
+      <div class="logo-text">
+        Cresci e Perdi
+        <span>Marketing</span>
+      </div>
+    </div>
+
+    <h1>Simulador<br>Marketing</h1>
+    <p>Você vai enfrentar <strong>12 casos reais</strong> de marketing, conteúdo e comunicação — persona, bastidores, inauguração, troca de coleção e situações hipotéticas. Algumas fases exigem que você <strong>escreva a resposta</strong>, avaliada em conteúdo, tom e português.</p>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Casos</div>
+        <div class="valor">12 situações reais</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Fases por caso</div>
+        <div class="valor">3 decisões</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Pontuação máx.</div>
+        <div class="valor">360 pontos</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Aprovação</div>
+        <div class="valor">≥ 70% (252 pts)</div>
+      </div>
+    </div>
+
+    <div class="campo-grupo">
+      <label>Seu nome completo</label>
+      <input type="text" id="input-nome" placeholder="Digite seu nome..." autocomplete="off">
+      <div class="erro-msg" id="erro-nome">Por favor, informe seu nome.</div>
+    </div>
+
+    <button class="btn-comecar" onclick="iniciarSimulador()">Iniciar Simulador →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TELA 2 — SIMULADOR
+══════════════════════════════════════════════ -->
+<div id="tela-simulador">
+  <div class="sim-header">
+    <div class="sim-header-left">
+      <div class="sim-logo">📱 Marketing</div>
+      <div class="sim-usuario">Atendente: <strong id="sim-nome">—</strong></div>
+    </div>
+    <div class="sim-progresso-wrap">
+      <div class="sim-caso-label">Caso <strong id="sim-caso-num">1</strong> de 12</div>
+    </div>
+  </div>
+  <div class="barra-topo"><div class="barra-topo-fill" id="barra-fill" style="width:0%"></div></div>
+
+  <div class="sim-body">
+    <!-- Painel chat -->
+    <div class="painel-chat">
+      <div class="chat-topbar">
+        <div class="franqueado-avatar" id="chat-avatar">?</div>
+        <div class="franqueado-info">
+          <div class="nome" id="chat-nome-franqueado">—</div>
+          <div class="cidade" id="chat-cidade">—</div>
+        </div>
+        <div class="status-badge">● Ao vivo</div>
+      </div>
+      <div class="chat-mensagens" id="chat-mensagens"></div>
+    </div>
+
+    <!-- Painel decisão -->
+    <div class="painel-decisao">
+      <div class="decisao-header">
+        <div class="fase-pill" id="fase-pill">Fase 1 — Triagem</div>
+        <div class="decisao-titulo" id="decisao-titulo">O que você faz?</div>
+        <div class="decisao-sub" id="decisao-sub">Leia a mensagem e decida como agir.</div>
+      </div>
+
+      <div class="decisao-corpo">
+        <div class="opcoes-lista" id="opcoes-lista"></div>
+        <div class="feedback-box" id="feedback-box">
+          <div class="feedback-titulo" id="feedback-titulo"></div>
+          <div id="feedback-texto"></div>
+        </div>
+      </div>
+
+      <button class="btn-proximo" id="btn-proximo" onclick="proximaFase()">Continuar →</button>
+
+      <div class="placar-row">
+        <div class="placar-item">
+          <div class="num verde" id="placar-acertos">0</div>
+          <div class="lab">Acertos</div>
+        </div>
+        <div class="placar-item">
+          <div class="num vermelho" id="placar-erros">0</div>
+          <div class="lab">Erros</div>
+        </div>
+        <div class="placar-item">
+          <div class="num amarelo" id="placar-pontos">0</div>
+          <div class="lab">Pontos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TELA 3 — RESULTADO
+══════════════════════════════════════════════ -->
+<div id="tela-resultado">
+  <div class="resultado-wrap">
+    <div class="resultado-card">
+      <div class="resultado-icone" id="res-icone">🎯</div>
+      <h2 id="res-titulo">Simulação Concluída!</h2>
+      <div class="resultado-sub" id="res-sub">Resultado registrado com sucesso.</div>
+      <div class="nota-grande" id="res-nota">—</div>
+      <div class="status-pill-res"><span id="res-pill">—</span></div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="num" id="res-acertos">—</div>
+          <div class="lab">Acertos</div>
+        </div>
+        <div class="stat-item">
+          <div class="num" id="res-erros">—</div>
+          <div class="lab">Erros</div>
+        </div>
+        <div class="stat-item">
+          <div class="num" id="res-pontos">—</div>
+          <div class="lab">Pontos</div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <h3>Desempenho por caso</h3>
+        <div id="breakdown-lista"></div>
+      </div>
+
+      <div class="msg-gestor" id="msg-gestor">—</div>
+
+      <button class="btn-finalizar-res" onclick="window.location.reload()">Refazer Simulação</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+const CASOS = [
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 1 — PERSONA: IDENTIFICAR O PRODUTO CERTO PARA PUBLICAR
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 1,
+    cliente: { nome: 'Situação de Conteúdo', origem: 'Decisão de publicação', avatar: 'P1', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Decisão de Conteúdo',
+        titulo: 'Qual produto você escolhe para o vídeo de hoje?',
+        sub: 'A persona majoritária é uma mãe com 2 filhos e ~R$200/mês para roupas infantis. Escolha o produto correto.',
+        mensagem: 'A loja tem esses itens disponíveis hoje: (A) camiseta de marca R$98, (B) macacão Carter\'s R$22, (C) tênis Nike R$120, (D) body R$8. Qual você destaca no vídeo de bastidor?',
+        opcoes: [
+          { letra: 'A', texto: 'Camiseta de marca R$98 — produto de qualidade gera desejo e valoriza a loja', certa: false },
+          { letra: 'B', texto: 'Macacão Carter\'s R$22 — está dentro do teto de preço da persona (~R$25/peça) e é marca reconhecida', certa: true },
+          { letra: 'C', texto: 'Tênis Nike R$120 — serve como isca de tráfego sem mencionar o preço', certa: false },
+          { letra: 'D', texto: 'Body R$8 — qualquer pessoa tem R$8 disponível, vai lotar a loja', certa: false }
+        ],
+        feedback_certo: 'Correto! R$22 está dentro do teto da persona (R$25/peça). Marca reconhecida + preço acessível = identificação + barreira de compra baixa. O body R$8 funciona em eventos, não como conteúdo padrão de bastidor.',
+        feedback_errado: 'O teto de preço da persona majoritária é ~R$25/peça. Produtos acima disso afastam antes de atrair. O body R$8 é para eventos — em bastidor padrão, precisa ter substância. O macacão Carter\'s R$22 combina marca + preço dentro do perfil da persona.',
+        resposta_sistema: 'Escolha: macacão Carter\'s R$22. Narrativa sugerida: "Gente, olha esse macacão Carter\'s que chegou aqui! R$22 — praticamente novo. Sabe aquele que você comprou novo por R$90 e seu filho usou três meses? É exatamente esse. Vai lá pegar o seu!" 🎯'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Construção da Narrativa',
+        titulo: 'Como você constrói a fala da persona para esse vídeo?',
+        sub: 'Escolha a abertura de vídeo que usa corretamente a lógica da persona.',
+        mensagem: 'Você vai gravar o bastidor do macacão Carter\'s R$22. Qual abertura de vídeo está correta?',
+        opcoes: [
+          { letra: 'A', texto: '"Chegou mais um lote incrível na loja! Temos macacão Carter\'s a partir de R$22. Venha conferir!"', certa: false },
+          { letra: 'B', texto: '"Gente, saí da escola agora com minha filha e vim direto pra cá — olha o que encontrei! Esse macacão Carter\'s, praticamente novo, R$22. A minha compraria fácil. Quem é mãe de bebê sabe que dura uns 3 meses no máximo — pra que pagar R$90 no novo?"', certa: true },
+          { letra: 'C', texto: '"Produto de qualidade para os seus filhos! Carter\'s é sinônimo de durabilidade. Temos R$22 hoje!"', certa: false },
+          { letra: 'D', texto: '"Macacão Carter\'s, excelente estado, R$22. Venha buscar o seu antes que acabe."', certa: false }
+        ],
+        feedback_certo: 'Correto! A narrativa começa com situação de vida real (saiu da escola), cria identificação, usa o argumento do tempo de uso curto (3 meses), e termina com o preço como conclusão lógica. Isso é persona aplicada.',
+        feedback_errado: 'A narrativa correta começa com uma situação de vida cotidiana que a persona reconhece, cria identificação, usa o argumento central (tempo de uso x custo), e apresenta o preço como conclusão. Abertura comercial genérica não gera identificação.',
+        resposta_sistema: 'A estrutura correta: 1) Situação de vida real → 2) Conexão com o produto → 3) Argumento central (tempo de uso / custo) → 4) Preço como conclusão lógica → 5) Convite implícito. Nunca começar com "chegou um lote" — isso é anúncio, não persona.'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Crie a narrativa para um tênis Nike R$38',
+        sub: 'O produto é um tênis Nike infantil R$38, ótimo estado. Escreva a fala completa para o bastidor usando a lógica da persona.',
+        mensagem: 'Tênis Nike infantil, tamanho 28, ótimo estado, R$38. Crie o script do vídeo.',
+        campo_label: 'Script do bastidor — Tênis Nike R$38:',
+        campo_placeholder: 'Escreva aqui a fala completa do vídeo usando a lógica de persona...',
+        avaliacao_prompt: `marketing cresci perdi avaliando script de bastidor com persona. Checar: começa com situação de vida real da mãe, menciona o argumento de custo-benefício ou tempo de uso, menciona o preço, usa tom próximo e não comercial, não usa linguagem de anúncio genérico`,
+        resposta_sistema: '"Oi gente! Tô aqui olhando esse tênis Nike que chegou — tamanho 28, ótimo estado. R$38. Sabe que tênis é o artigo que mais roda na infância? A criança usa um mês e já apertou. Pra que pagar R$200 no novo se tem esse aqui por R$38? Cadê as mamães de menino tamanho 28?" 🎯'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 2 — PRODUTO CARO: QUANDO MENCIONAR O PREÇO
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 2,
+    cliente: { nome: 'Decisão Estratégica', origem: 'Conteúdo de redes sociais', avatar: 'P2', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Estratégia de Preço no Conteúdo',
+        titulo: 'Carrinho de bebê R$350 — você menciona o preço no vídeo?',
+        sub: 'O teto da persona é ~R$25/peça. Como tratar produtos acima desse range?',
+        mensagem: 'A loja tem um carrinho de bebê seminovo em ótimo estado por R$350. Você vai fazer um vídeo. O que você faz com o preço?',
+        opcoes: [
+          { letra: 'A', texto: 'Mencionar o preço com destaque — R$350 é barato para um carrinho de qualidade', certa: false },
+          { letra: 'B', texto: 'Não mencionar o preço — mostrar o produto com qualidade e deixar a descoberta do preço para a visita à loja', certa: true },
+          { letra: 'C', texto: 'Não fazer o vídeo — produto caro afasta a persona e não vale o conteúdo', certa: false },
+          { letra: 'D', texto: 'Mencionar o preço novo (R$1.200) e o preço da loja (R$350) para destacar o desconto', certa: false }
+        ],
+        feedback_certo: 'Correto! Produto acima do range da persona: mostrar com qualidade SEM mencionar o preço. O cliente vai até a loja, encontra o produto, e a decisão de compra acontece presencialmente. O vídeo serve como isca de tráfego.',
+        feedback_errado: 'Produto acima do teto da persona: omitir o preço no vídeo. Mostrar com qualidade atrai quem pode comprar — quando chegam à loja, encontram outros produtos dentro do range. Mencionar R$350 pode criar barreira antes da visita.',
+        resposta_sistema: 'Narrativa correta para produto caro: "Gente, não vou nem falar o preço porque vocês vão ter que vir ver com os próprios olhos. Esse carrinho chegou aqui num estado absurdo — praticamente zero uso. Quem tem bebê sabe o quanto isso vale. Vem cá!" (sem mencionar R$350)'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Produto Caro com Argumento de Tempo de Uso',
+        titulo: 'Como você aplica o argumento de tempo de uso para produtos grandes?',
+        sub: 'Cadeira para auto R$85 — construa o argumento correto.',
+        mensagem: 'Cadeira para auto infantil, R$85, ótimo estado. Qual é o argumento central do vídeo?',
+        opcoes: [
+          { letra: 'A', texto: '"Cadeira para auto de qualidade, R$85. Segurança para o seu filho!"', certa: false },
+          { letra: 'B', texto: '"Gente, cadeira para auto é um daqueles itens que a criança usa até os 4 anos e pronto — acabou. Aqui está por R$85 em ótimo estado. Pra que pagar R$400 no novo se vai usar até essa fase passar?"', certa: true },
+          { letra: 'C', texto: '"Cadeira para auto chegou na loja! R$85 — aproveite enquanto tem."', certa: false },
+          { letra: 'D', texto: '"Segurança do seu filho por R$85. Produto certificado e em ótimo estado."', certa: false }
+        ],
+        feedback_certo: 'Correto! O argumento do tempo de uso transforma o preço alto em decisão inteligente. "Vai usar até os 4 anos e pronto" justifica pagar R$85 em vez de R$400. Esse é o raciocínio da persona.',
+        feedback_errado: 'O argumento de tempo de uso é o mais poderoso para produtos de fase: "usa por X tempo e acabou — por que pagar caro?" Isso valida a compra do seminovo para quem faz contas na cabeça — e a persona sempre faz.',
+        resposta_sistema: 'Fórmula para produto de fase: [nome do produto] + [tempo de uso curto] + [custo do novo] + [preço da loja] = decisão óbvia para quem pensa em custo-benefício. A persona sempre faz esse cálculo — ajude ela a chegar na conclusão certa.'
+      },
+      {
+        tipo: 'complicacao',
+        pill: 'Fase 3 — Complicação',
+        titulo: 'A franqueada quer postar só produtos caros para "valorizar a loja".',
+        sub: 'Como você orienta essa decisão estratégica?',
+        mensagem: 'A franqueada diz: "Quero postar só produtos de R$100+ para mostrar que temos qualidade e não parecer barateiro."',
+        opcoes: [
+          { letra: 'A', texto: 'Apoiar — qualidade percebida é importante para o posicionamento da marca', certa: false },
+          { letra: 'B', texto: 'Orientar que postar só produtos caros faz a persona majoritária pensar "essa loja não é pra mim" — mesmo que a loja tenha dezenas de produtos no preço dela, a comunicação já sinalizou que não é para ela', certa: true },
+          { letra: 'C', texto: 'Sugerir intercalar: semana de produtos caros, semana de produtos baratos', certa: false },
+          { letra: 'D', texto: 'Aprovar parcialmente, desde que sempre mencione também opções mais baratas na legenda', certa: false }
+        ],
+        feedback_certo: 'Correto! O manual é claro: "se o vídeo mostrar só produto caro, a cliente majoritária vai pensar \'essa loja nem entro, que já sei que é caro\'. E ela não vai — mesmo que dentro da loja haja dezenas de produtos no preço dela."',
+        feedback_errado: 'O manual alerta: comunicação com só produtos caros afasta a persona antes mesmo da visita. O produto caro pode aparecer como isca de tráfego, mas o feed precisa ter produtos dentro do range da persona como referência principal.',
+        resposta_sistema: 'Orientação: produtos caros podem aparecer como isca de tráfego (sem preço) para atrair quem pode comprar. Mas o posicionamento principal do feed deve comunicar para a persona majoritária — quem tem R$200/mês para gastar com roupa dos filhos. Os dois têm lugar, mas com papéis diferentes.'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 3 — TROCA DE COLEÇÃO: NÃO ANTECIPAR
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 3,
+    cliente: { nome: 'Calendário de Coleção', origem: 'Decisão estratégica', avatar: 'TC', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Calendário da Rede',
+        titulo: 'É início de março. A loja deve trocar para inverno agora?',
+        sub: 'O concorrente já expôs peças de frio. A franqueada quer antecipar.',
+        mensagem: 'É dia 5 de março. A loja ao lado já colocou moletom e casaco na vitrine. A franqueada quer fazer o mesmo imediatamente. O que você orienta?',
+        opcoes: [
+          { letra: 'A', texto: 'Apoiar — se o concorrente fez, é porque o mercado está pedindo', certa: false },
+          { letra: 'B', texto: 'Orientar a NÃO trocar — o concorrente faz porque é obrigado pelo fornecedor, não por estratégia. Em março o consumidor ainda está comprando verão. Trocar antes é perder os dois lados', certa: true },
+          { letra: 'C', texto: 'Sugerir colocar algumas peças de inverno misturadas com o verão', certa: false },
+          { letra: 'D', texto: 'Deixar a franqueada decidir — ela conhece melhor o cliente da cidade dela', certa: false }
+        ],
+        feedback_certo: 'Correto! O concorrente não está fazendo uma estratégia — está resolvendo um problema que a Cresci e Perdi não tem. Em março o consumidor ainda compra verão. Antecipar = perder o verão que ainda existe + expor inverno para quem não está procurando frio.',
+        feedback_errado: 'O playbook é claro: o lojista tradicional troca cedo porque o fornecedor o obriga, não por estratégia. A Cresci e Perdi vende no tempo do consumidor — e o consumidor de março ainda compra verão. Copiar o concorrente é copiar a solução de quem tem um problema diferente.',
+        resposta_sistema: 'Orientação: em março, o foco é girar o verão com o Evento 0 a 100 — não trocar. A troca oficial é ~21 de abril, quando a rede toda faz junto. Uma loja trocando sozinha em março perde o verão E não aproveita o efeito de rede da troca simultânea.'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Sequência de Campanhas',
+        titulo: 'Qual é a sequência correta de campanhas de março a maio?',
+        sub: 'A franqueada quer saber o que fazer em cada etapa.',
+        mensagem: 'A franqueada pergunta: "Ok, não vou trocar agora. Mas o que faço de março até maio?"',
+        opcoes: [
+          { letra: 'A', texto: 'Março: spoilers de inverno → Abril: Troca → Maio: inverno pleno', certa: false },
+          { letra: 'B', texto: 'Março: Evento 0 a 100 (girar verão) → 1º Abril: Preços que parece mentira → Páscoa: roupinhas temáticas → ~21 Abril: Troca Oficial → Maio: melhor mês do ano', certa: true },
+          { letra: 'C', texto: 'Março: liquidação de verão → Abril: pausa → Maio: lançamento inverno', certa: false },
+          { letra: 'D', texto: 'Março a Abril: manter o verão sem eventos → ~21 Abril: Troca → Maio: inverno', certa: false }
+        ],
+        feedback_certo: 'Correto! Essa é a sequência exata do Playbook. Cada fase tem uma intenção: girar verão, liberar espaço, gerar caixa e chegar na troca com a loja pronta para bombar em maio.',
+        feedback_errado: 'A sequência do Playbook: 0 a 100 (girar verão) → Preços que parece mentira (1º Abril, limpar o que sobrou) → Páscoa (roupinhas temáticas) → Troca Oficial (~21 Abril) → Maio = pico do ano. Cada fase prepara a seguinte.',
+        resposta_sistema: 'Maio é o melhor mês do ano — mas só para quem chegou na troca certo, com espaço na arara e caixa disponível. O Evento 0 a 100 em março existe exatamente para isso: chegar em abril sem resíduo de verão e com capital para investir na nova coleção.'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Explique para a franqueada por que agosto é o "desgosto"',
+        sub: 'Ela está em agosto com estoque de inverno e o frio ainda está forte. Ela quer esperar vender tudo. Escreva sua orientação.',
+        mensagem: 'A franqueada diz em agosto: "Ainda tá frio aqui! Vou segurar o inverno até setembro."',
+        campo_label: 'Sua orientação para a franqueada:',
+        campo_placeholder: 'Explique a curva do inverno e por que agosto é o sinal de virada...',
+        avaliacao_prompt: `marketing cresci perdi avaliando orientação sobre curva de vendas do inverno. Checar: menciona que agosto é o desgosto mesmo com frio, explica que o consumidor já comprou o que precisava, orienta a começar a planejar a virada em vez de esperar o frio acabar, usa argumentação do playbook`,
+        resposta_sistema: 'Agosto é o "desgosto" — mesmo que ainda faça frio, o consumidor já comprou o que precisava na janela de maio/junho. A demanda por inverno cai antes do clima mudar. Quem espera agosto para pensar na virada já perdeu o timing. O momento de planejar é agora, não quando o estoque zerar.'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 4 — INAUGURAÇÃO: BASTIDORES E ISCAS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 4,
+    cliente: { nome: 'Pré-Inauguração', origem: 'Onboarding de inauguração', avatar: 'IN', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Limite de Tempo dos Vídeos',
+        titulo: 'Qual é o tempo máximo de cada bastidor de inauguração?',
+        sub: 'A franqueada gravou um bastidor de 2 minutos. O que você faz?',
+        mensagem: 'A franqueada enviou para aprovação um bastidor de brinquedos com 2 minutos e 10 segundos de duração. Ela está animada com o resultado.',
+        opcoes: [
+          { letra: 'A', texto: 'Aprovar — conteúdo bom não tem limite de tempo', certa: false },
+          { letra: 'B', texto: 'Reprovar e pedir regravação — o limite é 1 minuto e 29 segundos, pois a Meta não permite patrocinar vídeos acima desse tempo', certa: true },
+          { letra: 'C', texto: 'Aprovar apenas para postagem orgânica, sem patrocínio', certa: false },
+          { letra: 'D', texto: 'Aprovar mas avisar que da próxima vez deve ser mais curto', certa: false }
+        ],
+        feedback_certo: 'Correto! O limite é 1 minuto e 29 segundos — regra do manual de inauguração. A Meta não permite patrocinar vídeos acima desse tempo, e os bastidores de inauguração precisam ser patrocinados.',
+        feedback_errado: 'O manual é explícito: todos os bastidores devem ter no máximo 1 minuto e 29 segundos, pois a Meta não permite patrocinar vídeos acima desse tempo. Patrocínio é essencial na semana de inauguração.',
+        resposta_sistema: 'Frase de solicitação de alteração: "A narrativa ficou ótima! Mas precisamos que o vídeo fique em até 1 minuto e 29 segundos — acima disso não conseguimos patrocinar, e o patrocínio é essencial para o alcance da inauguração. Pode regravar cortando o trecho final?" 🎬'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Iscas de Bastidor',
+        titulo: 'Quais são as iscas corretas para o bastidor de itens grandes?',
+        sub: 'A franqueada precisa separar as iscas para gravar. Qual combinação está correta?',
+        mensagem: 'Para o bastidor de itens grandes da inauguração, a franqueada pergunta quais iscas separar e a que preços.',
+        opcoes: [
+          { letra: 'A', texto: 'Andador R$45, bicicleta R$38, boneca Baby Alive R$22', certa: false },
+          { letra: 'B', texto: 'Carrinho guarda-chuva R$89 (R$79 no GiraCrédito), bebê conforto sem base R$69 (R$59 GiraCrédito), cadeira para auto R$79 (R$69 GiraCrédito)', certa: true },
+          { letra: 'C', texto: 'Qualquer item grande acima de R$50, com preço livre definido pela loja', certa: false },
+          { letra: 'D', texto: 'Chiqueirinho R$89, banheira R$59, cadeirinha R$79', certa: false }
+        ],
+        feedback_certo: 'Correto! Essas são as iscas exatas do manual de inauguração para bastidor de itens grandes, com os preços definidos (normal + GiraCrédito). As iscas precisam estar precificadas no sistema.',
+        feedback_errado: 'O manual define as iscas específicas para cada bastidor de inauguração com preços fixos. Itens grandes: carrinho guarda-chuva, bebê conforto, cadeira para auto, banheira com suporte — com valores exatos normal e GiraCrédito.',
+        resposta_sistema: 'Iscas confirmadas para itens grandes: Carrinho guarda-chuva/passeio R$89 | R$79 GiraCrédito. Bebê conforto sem base R$69 | R$59 GiraCrédito. Cadeira para auto R$79 | R$69 GiraCrédito. Banheira com suporte R$59 | R$49 GiraCrédito. Todas precisam estar precificadas no sistema antes da gravação!'
+      },
+      {
+        tipo: 'complicacao',
+        pill: 'Fase 3 — Complicação',
+        titulo: 'A rede social da franqueada caiu na véspera da inauguração.',
+        sub: 'É a situação de emergência de inauguração. Qual é o protocolo?',
+        mensagem: 'Véspera da inauguração, 20h. A conta do Instagram da franqueada foi desativada pelo Meta. Não conseguem recuperar.',
+        opcoes: [
+          { letra: 'A', texto: 'Cancelar os bastidores de inauguração e remarcar para quando a conta voltar', certa: false },
+          { letra: 'B', texto: 'Acionar equipe de anúncios com urgência para contato com Meta + criar perfil reserva para postar em COLAB + acionar equipe de comunicação para carro de som/disparo de áudio + considerar sorteio de vale-compras no perfil reserva', certa: true },
+          { letra: 'C', texto: 'Postar os vídeos no perfil pessoal da franqueada como solução temporária', certa: false },
+          { letra: 'D', texto: 'Aguardar o Meta resolver — geralmente volta em 24-48h', certa: false }
+        ],
+        feedback_certo: 'Correto! Esse é exatamente o protocolo de emergência do manual de inauguração: anúncios + Meta + perfil reserva em COLAB + comunicação para áudio/carro de som + sorteio para engajamento no perfil reserva.',
+        feedback_errado: 'O manual de inauguração tem protocolo específico para queda de rede social: equipe de anúncios contata o Meta, cria perfil reserva para COLAB, aciona comunicação para áudio em carro de som e disparo, e promove sorteio no perfil reserva para engajamento.',
+        resposta_sistema: 'Protocolo de emergência ativado: 1) Equipe anúncios aciona Meta urgente. 2) Criando perfil reserva para COLAB com os vídeos. 3) Equipe de comunicação ativa carro de som + disparo de áudio no Plug Elad. 4) Sorteio de vale-compras no perfil reserva para atrair seguidores. A inauguração acontece normalmente!'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 5 — BOAS PRÁTICAS DE REDES SOCIAIS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 5,
+    cliente: { nome: 'Análise de Conteúdo', origem: 'Revisão de vídeo', avatar: 'BP', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — O Que Nunca Fazer',
+        titulo: 'Qual dessas práticas é proibida no conteúdo da Cresci e Perdi?',
+        sub: 'Identifique o erro grave no conteúdo.',
+        mensagem: 'A franqueada gravou um reels seguindo uma trend do TikTok — aquela com música famosa e texto em cima. Ficou bem editado e animado. Ela manda para aprovação.',
+        opcoes: [
+          { letra: 'A', texto: 'Aprovar — conteúdo viral é sempre positivo para o alcance', certa: false },
+          { letra: 'B', texto: 'Reprovar — não se grava trends de TikTok/Instagram, pois o objetivo é atrair a persona (mãe), e trends atraem pessoas de todos os lados sem filtro', certa: true },
+          { letra: 'C', texto: 'Aprovar apenas para o TikTok, não para o Instagram', certa: false },
+          { letra: 'D', texto: 'Aprovar se a música for de domínio público', certa: false }
+        ],
+        feedback_certo: 'Correto! Trends de TikTok/Instagram atraem pessoas de todos os lados — não a persona específica (mãe com filhos). O objetivo é atrair a persona, não volume aleatório de pessoas sem perfil de compra.',
+        feedback_errado: 'O manual proíbe trends de TikTok/Instagram: "podemos acabar atraindo pessoas de todos os lados e o objetivo é atrair nossa persona que é a mãe." Alcance sem persona não gera movimento de loja.',
+        resposta_sistema: 'Frase de orientação: "O vídeo ficou ótimo de execução! Mas não seguimos trends de TikTok/Instagram — o objetivo dos nossos vídeos é sempre atrair a mãe com filhos para a loja, e trends atraem todo tipo de público sem filtro. Pode regravar com bastidor direto e narrativa focada nos preços? 💚"'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Cronograma Diário',
+        titulo: 'Qual é a postagem correta para as 16h?',
+        sub: 'O cronograma diário pós-inauguração tem horários definidos. Identifique o correto.',
+        mensagem: 'São 15h50. A franqueada pergunta o que postar às 16h conforme o cronograma da rede.',
+        opcoes: [
+          { letra: 'A', texto: 'Primeiro vídeo de reposição do dia', certa: false },
+          { letra: 'B', texto: 'Vídeo de compras mostrando chegada de produtos', certa: false },
+          { letra: 'C', texto: 'Postagem do evento do dia: mídia principal + bastidores + carrossel de iscas com preços atrativos. O bastidor destaque deve ter bastante preços para patrocinar', certa: true },
+          { letra: 'D', texto: 'Três vídeos de reposição votados para o horário de almoço na narrativa', certa: false }
+        ],
+        feedback_certo: 'Correto! 16h é o horário do evento: mídia principal + bastidores + carrossel de iscas. E o bastidor destaque precisa ter bastante preços para facilitar o patrocínio.',
+        feedback_errado: 'O cronograma: 8h = primeiro vídeo de reposição, 9h = loja aberta, 10h = vídeo de compras, 11h-12h = 3 vídeos de reposição, 16h = evento do dia completo (mídia + bastidores + carrossel de iscas).',
+        resposta_sistema: 'Cronograma confirmado: 16h = evento do dia. Checklist: ✅ Mídia oficial do evento postada ✅ Bastidores gravados com preços visíveis ✅ Carrossel de iscas com preços atrativos ✅ Bastidor destaque selecionado para patrocínio. Tudo pronto?'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Oriente sobre o que não gravar na frente da loja',
+        sub: 'A franqueada quer gravar bastidores na porta da loja para mostrar a fachada. Escreva sua orientação.',
+        mensagem: 'A franqueada diz: "Quero gravar na calçada na frente da loja para aparecer a fachada bonita. Posso?"',
+        campo_label: 'Sua orientação para a franqueada:',
+        campo_placeholder: 'Explique por que não se grava na frente da loja e o que fazer no lugar...',
+        avaliacao_prompt: `marketing cresci perdi avaliando orientação sobre não gravar vídeos na frente da loja. Checar: explica que grava na parte de trás dá impressão que o item ainda não saiu, menciona que gravar na frente dá impressão que o item parado não vendeu, orienta gravar nos bastidores internos, tom parceiro e não proibitivo`,
+        resposta_sistema: 'Orientação: não gravamos na frente da loja porque passa duas impressões erradas: 1) Que o item ficou tanto tempo que deu pra gravar do lado de fora — "se é tão bom, por que ainda não saiu?". 2) Gravar por trás dá a impressão de que ainda vai sair, criando urgência. Os bastidores internos são mais eficientes para criar senso de novidade e exclusividade! 🎬'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 6 — DESAPEGO: TOM E COMUNICAÇÃO
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 6,
+    cliente: { nome: 'Comunicação do Desapego', origem: 'Treinamento de equipe', avatar: 'DE', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Tom Correto do Desapego',
+        titulo: 'Qual das frases abaixo usa o tom correto para comunicar o Desapego?',
+        sub: 'O tom deve ser econômico e prático — nunca ambiental ou emotivo.',
+        mensagem: 'A equipe vai criar um post sobre o Desapego. Qual frase está correta?',
+        opcoes: [
+          { letra: 'A', texto: '"Faça parte do movimento que salva o planeta! Doe suas roupas e ajude o meio ambiente e outras famílias."', certa: false },
+          { letra: 'B', texto: '"Transforme o que está parado em dinheiro na hora. Traga roupas, calçados e brinquedos em bom estado e receba PIX ou GiraCrédito."', certa: true },
+          { letra: 'C', texto: '"Ação solidária: troque suas roupas usadas e ajude famílias carentes da sua cidade."', certa: false },
+          { letra: 'D', texto: '"Sustentabilidade começa em casa! Desapegue e contribua para um consumo mais consciente."', certa: false }
+        ],
+        feedback_certo: 'Correto! Tom econômico e prático: dinheiro na hora, processo simples, benefício direto. O manual proíbe discursos ambientais, assistencialistas e de "consumo consciente" — o foco é sempre econômico.',
+        feedback_errado: 'O manual é explícito: "nunca use discursos sobre futuro, planeta ou impacto ambiental. O foco é: aproveitar o que já existe e fazer o dinheiro render." O Desapego é um processo econômico — não é movimento social nem ambiental.',
+        resposta_sistema: 'Tom correto: econômico, prático, direto. "Dinheiro ou crédito na hora" é o argumento central. Nunca: "ajude o planeta", "consumo consciente", "solidariedade". Sempre: "recupere valor", "faça o dinheiro render", "aproveite o que já existe".'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Processo do Desapego',
+        titulo: 'Um cliente pergunta: "O que acontece com meu item depois que entrego?"',
+        sub: 'Descreva o ciclo correto do Desapego em 5 etapas.',
+        mensagem: 'Cliente pergunta: "Entrego minha roupa, recebo o PIX — e aí? O que vocês fazem com o item?"',
+        opcoes: [
+          { letra: 'A', texto: 'O item é doado para famílias carentes cadastradas na rede', certa: false },
+          { letra: 'B', texto: 'O item passa pela avaliação/curadoria da loja, é precificado, exposto à venda, e vendido para outra família que economiza comprando um produto em ótimo estado por preço acessível', certa: true },
+          { letra: 'C', texto: 'O item é enviado para um centro de triagem nacional que redistribui para as lojas', certa: false },
+          { letra: 'D', texto: 'Depende do estado do item — pode ser vendido, doado ou descartado', certa: false }
+        ],
+        feedback_certo: 'Correto! O ciclo: família traz → loja avalia e precifica → item entra na curadoria → é exposto à venda → outra família compra com economia. Sempre esse ciclo, sem exceção.',
+        feedback_errado: 'O ciclo do Desapego é sempre o mesmo: chega → avaliação → precificação → curadoria → exposição → venda para outra família. Nunca doação, nunca redistribuição central. É um ciclo econômico local.',
+        resposta_sistema: 'Resposta modelo: "Seu item passa pela nossa curadoria — avaliamos, precificamos e colocamos à venda na loja. Vai acabar na mão de uma outra família que vai economizar muito comprando algo em ótimo estado. É um ciclo: você libera espaço e ganha dinheiro, outra família ganha qualidade a preço justo. 💛"'
+      },
+      {
+        tipo: 'complicacao',
+        pill: 'Fase 3 — Complicação',
+        titulo: 'O cliente quer receber por cartão. Como você responde?',
+        sub: 'Situação cotidiana que gera dúvida. Qual é o protocolo?',
+        mensagem: 'Cliente após o desapego: "Posso receber por cartão de crédito em vez de PIX? Prefiro assim."',
+        opcoes: [
+          { letra: 'A', texto: 'Aceitar — cartão de débito equivale a PIX para fins operacionais', certa: false },
+          { letra: 'B', texto: 'Informar que as únicas formas disponíveis são PIX (dinheiro imediato) ou GiraCrédito — sem outras opções. Em caso de dúvida sobre regras, consultar a gestão antes de confirmar', certa: true },
+          { letra: 'C', texto: 'Verificar com a gerência se é possível como exceção', certa: false },
+          { letra: 'D', texto: 'Oferecer transferência bancária como alternativa ao PIX', certa: false }
+        ],
+        feedback_certo: 'Correto! O manual é claro: "apenas essas duas formas de pagamento existem. Não invente outras. Não confirme outros meios sem orientação da gestão." PIX ou GiraCrédito — ponto final.',
+        feedback_errado: 'O manual é explícito: apenas PIX e GiraCrédito. "Não invente outras formas. Não confirme outros meios sem orientação da gestão." Cartão, transferência, boleto — nenhum desses existe no processo do Desapego.',
+        resposta_sistema: 'Resposta padrão: "As formas disponíveis são PIX imediato ou GiraCrédito para usar aqui na loja — o GiraCrédito ainda dá um valor maior! 😊 Cartão não está disponível no processo do desapego. Qual você prefere entre os dois?"'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 7 — TROCA DE COLEÇÃO: AVATAR E SIMULTANEIDADE
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 7,
+    cliente: { nome: 'Evento Troca de Coleção', origem: 'Decisão de publicação', avatar: 'AV', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Avatar da Troca',
+        titulo: 'Quando o avatar exclusivo da Troca de Coleção deve ser ativado?',
+        sub: 'A franqueada quer colocar o avatar logo que receber as peças de inverno, em 15 de abril.',
+        mensagem: 'A franqueada recebeu as primeiras peças de inverno em 15 de abril. Ela quer ativar o avatar de Troca de Coleção hoje para criar expectativa.',
+        opcoes: [
+          { letra: 'A', texto: 'Aprovar — criar expectativa com antecedência é bom para o engajamento', certa: false },
+          { letra: 'B', texto: 'Reprovar — o avatar é ativado apenas na semana do evento (~21 de abril). Usar antes dilui o efeito que depende da concentração temporal de toda a rede fazendo junto', certa: true },
+          { letra: 'C', texto: 'Aprovar para lojas do Sul que já sentem o frio', certa: false },
+          { letra: 'D', texto: 'Deixar a franqueada decidir — ela conhece o cliente dela', certa: false }
+        ],
+        feedback_certo: 'Correto! O avatar só entra na semana do evento. "Usar o avatar fora da data dilui o efeito — o impacto depende da concentração temporal." Quando dezenas de lojas trocam na mesma semana, o cliente percebe. Uma loja isolada não gera o mesmo efeito.',
+        feedback_errado: 'O avatar exclusivo só na semana do evento (~21 de abril) — não antes. O poder do evento está na simultaneidade: quando centenas de lojas trocam juntas, o cliente sente nas redes e no boca a boca. Uma loja sozinha gera uma fração do efeito.',
+        resposta_sistema: 'Orientação: antes da data oficial, pode postar reposições de outono, peças de transição e spoilers do que vem aí — isso aquece o cliente sem queimar o cartucho do evento. O avatar e a mídia completa de troca ficam para a semana certa. Assim a loja aproveita a onda da rede inteira! 🌊'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Adaptação Regional',
+        titulo: 'Uma loja do Nordeste pergunta: "Faço a troca de coleção no mesmo dia que a rede?"',
+        sub: 'Como você orienta a adaptação regional sem quebrar o padrão?',
+        mensagem: 'Franqueada de Fortaleza: "Em abril já vai estar quente aqui. Devo trocar para inverno na mesma data que o Sul?"',
+        opcoes: [
+          { letra: 'A', texto: 'Sim — todas as lojas devem trocar na mesma data para o efeito de rede', certa: false },
+          { letra: 'B', texto: 'Não — o Nordeste entra direto na Parte 2 da troca, com foco em verão prolongado. A mídia de Troca de Coleção padrão não é usada — aguarda a Parte 2 criada para esse perfil regional', certa: true },
+          { letra: 'C', texto: 'Depende — se a loja quiser participar, pode trocar; se não quiser, mantém o verão', certa: false },
+          { letra: 'D', texto: 'Trocar normalmente mas sem usar o avatar — participar simbolicamente do evento', certa: false }
+        ],
+        feedback_certo: 'Correto! Nordeste entra na Parte 2 da troca — estratégia criada especificamente para regiões de calor o ano todo. Não precisa fingir que vai fazer frio. O cliente de lá sabe que não vai.',
+        feedback_errado: 'O playbook prevê adaptação regional: Nordeste e Norte não fazem a troca padrão — entram na Parte 2, criada para regiões de calor. O evento da Troca de Coleção é de todo mundo junto, mas a estratégia de produto é adaptada.',
+        resposta_sistema: 'Orientação para Fortaleza: você entra na Parte 2 da troca — criada especialmente para regiões de calor o ano todo. Não precisa expor casaco e moletom. Sua estratégia tem peças próprias para o seu clima e cliente. Aguarda a comunicação da Parte 2! ☀️'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Explique para a franqueada por que a troca simultânea vale mais',
+        sub: 'Ela entendeu as regras mas não entende o porquê. Escreva a explicação.',
+        mensagem: 'Franqueada: "Entendo as regras, mas por que a data importa tanto? Se minha loja está pronta antes, por que esperar?"',
+        campo_label: 'Sua explicação sobre a simultaneidade:',
+        campo_placeholder: 'Explique o valor da troca simultânea de toda a rede...',
+        avaliacao_prompt: `marketing cresci perdi avaliando explicação sobre simultaneidade da troca de coleção. Checar: menciona que o efeito de rede é criado pela simultaneidade, que uma loja sozinha gera fração do impacto, que o cliente percebe quando centenas de lojas trocam juntas, que isso foi construído ao longo de anos com disciplina`,
+        resposta_sistema: 'Quando uma loja troca sozinha, é um evento isolado. Quando centenas de lojas trocam na mesma semana, o cliente vê nas redes sociais, ouve no grupo de mães, percebe no boca a boca — e entende que é UM EVENTO DA REDE, não de uma loja. Esse senso de "acontecimento" foi construído ao longo de anos de disciplina de calendário. Cada loja que respeita a data contribui para fortalecer o evento para toda a rede. 💪'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 8 — DESAPEGO: ITENS ACEITOS E POLÍTICA
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 8,
+    cliente: { nome: 'Atendimento na Loja', origem: 'Situação operacional', avatar: 'DA', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Política de Itens Aceitos',
+        titulo: 'O cliente chegou com esses itens. O que você aceita?',
+        sub: 'Aplique a política de itens aceitos do Desapego.',
+        mensagem: 'Um cliente chegou com: (1) roupas infantis em bom estado, (2) tênis com solado desgastado, (3) brinquedo incompleto sem peças, (4) roupa de adulto seminova.',
+        opcoes: [
+          { letra: 'A', texto: 'Aceitar tudo — quanto mais itens, mais GiraCrédito para o cliente', certa: false },
+          { letra: 'B', texto: 'Aceitar apenas as roupas infantis em bom estado. Rejeitar: tênis com solado desgastado, brinquedo incompleto e roupa de adulto', certa: true },
+          { letra: 'C', texto: 'Aceitar roupas infantis e a roupa de adulto, rejeitar tênis e brinquedo', certa: false },
+          { letra: 'D', texto: 'Aceitar roupas infantis e o tênis (mesmo desgastado), pois calçados têm alta demanda', certa: false }
+        ],
+        feedback_certo: 'Correto! A política aceita: roupas, calçados, brinquedos e acessórios infantis em bom estado. Rejeita: itens desgastados/com defeito, incompletos, e roupas de adulto (não são infantis).',
+        feedback_errado: 'A política aceita apenas itens infantis em bom estado. Solado desgastado = rejeita. Brinquedo incompleto = rejeita. Roupa de adulto = rejeita (não é infantil). "Apenas itens infantis em bom estado, limpos e prontos para uso."',
+        resposta_sistema: 'Comunicação padrão de rejeição: "Aceitamos roupas, calçados, brinquedos e acessórios infantis em bom estado. O tênis está com solado desgastado e o brinquedo está incompleto — não vão ter boa condição de revenda. As roupas de adulto também ficam fora do nosso foco. As roupinhas infantis a gente pega com prazer! 😊"'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Argumento Econômico',
+        titulo: 'O cliente diz que achou o valor do PIX muito baixo.',
+        sub: 'Como você comunica o modelo econômico sem perder o cliente?',
+        mensagem: 'Cliente após receber o valor: "Esperava mais. Achei que valeria mais do que isso."',
+        opcoes: [
+          { letra: 'A', texto: '"Lamentamos! Vamos verificar se podemos aumentar o valor para você."', certa: false },
+          { letra: 'B', texto: '"O valor é calculado com base no estado de conservação, marca e demanda de mercado. Se quiser um valor maior, o GiraCrédito oferece mais do que o PIX — é o benefício da rede para quem quer continuar comprando aqui!"', certa: true },
+          { letra: 'C', texto: '"Infelizmente não temos como mudar o valor — é o preço de mercado."', certa: false },
+          { letra: 'D', texto: '"Se achar pouco, pode levar os itens de volta — não temos problema."', certa: false }
+        ],
+        feedback_certo: 'Correto! Explicar o critério de avaliação + oferecer o GiraCrédito como alternativa de maior valor. Tom sempre econômico e propositivo — nunca defensivo nem descartando o cliente.',
+        feedback_errado: 'A resposta correta explica o critério (estado, marca, demanda) e apresenta o GiraCrédito como alternativa de maior valor. Nunca prometer revisão sem base, nunca ser defensivo, nunca sugerir que o cliente leve de volta.',
+        resposta_sistema: 'Argumento do GiraCrédito: "O PIX é o valor padrão de mercado. Mas o GiraCrédito oferece um valor maior justamente para incentivar o ciclo dentro da rede — você usa para comprar peças para os seus filhos aqui mesmo. Quer ver quanto ficaria no GiraCrédito? 😊"'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Cliente pergunta se pode trazer roupas com pequenas manchas',
+        sub: 'Escreva como você orientaria o cliente sobre a política de itens.',
+        mensagem: 'Cliente antes de ir à loja: "Posso trazer roupinhas que têm uma manchinha pequenininha? Estão bem conservadas fora isso."',
+        campo_label: 'Sua resposta para o cliente:',
+        campo_placeholder: 'Explique a política de itens de forma clara e acolhedora...',
+        avaliacao_prompt: `marketing cresci perdi avaliando comunicação sobre política de itens do desapego. Checar: explica que manchas não são aceitas mesmo que pequenas, usa tom acolhedor sem ser frio, orienta trazer os outros itens mesmo assim, não cria expectativa falsa de que a loja vai avaliar e aceitar mesmo com mancha`,
+        resposta_sistema: 'Resposta modelo: "Infelizmente itens com manchas ficam de fora — mesmo que pequeninhas, a gente precisa que estejam limpos e prontos para uso, pois vão para outra família. Mas traz as peças que estão em bom estado que a gente avalia com prazer! Quanto mais, melhor para você. 😊"'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 9 — PERSONA: QUEM APARECE NOS VÍDEOS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 9,
+    cliente: { nome: 'Decisão de Persona', origem: 'Orientação de equipe', avatar: 'QV', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Perfil de Quem Aparece',
+        titulo: 'A franqueada não quer aparecer nos vídeos. O que você faz?',
+        sub: 'Ela diz que tem vergonha de câmera e prefere postar só fotos.',
+        mensagem: 'Franqueada: "Não gosto de aparecer. Tenho vergonha de câmera. Posso postar só fotos dos produtos?"',
+        opcoes: [
+          { letra: 'A', texto: 'Aceitar — fotos de produtos bem fotografadas também funcionam para vender', certa: false },
+          { letra: 'B', texto: 'Orientar que aparecer nos vídeos é a função mais crítica da operação de redes — vídeo sem persona não funciona. Se ela não quer aparecer, precisa contratar alguém que apareça com qualidade', certa: true },
+          { letra: 'C', texto: 'Sugerir usar só a voz em vídeos animados sem aparecer o rosto', certa: false },
+          { letra: 'D', texto: 'Aceitar temporariamente enquanto ela se acostuma com a câmera', certa: false }
+        ],
+        feedback_certo: 'Correto! O manual é direto: "Aparecer nos vídeos não é opcional. É a função mais crítica de toda a operação de redes sociais. Quem não quer aparecer precisa superar ou contratar alguém que apareça com qualidade. Não existe terceira opção."',
+        feedback_errado: 'O manual não deixa opção: vídeo sem persona não funciona. "Vídeo editado com labirintite de câmera, música sem ninguém falando, produtos desfilando sem persona — não funciona." A loja precisa de uma voz humana que gere identificação.',
+        resposta_sistema: 'Orientação direta: a loja precisa de uma pessoa que apareça nos vídeos com naturalidade e gere identificação com a persona (mãe com filhos). Se não for a franqueada, pode ser uma colaboradora, uma gerente — alguém do time. Sem persona nos vídeos, a comunicação não move a loja. 📱'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — O Que Desqualifica uma Persona',
+        titulo: 'Qual erro desqualifica uma pessoa como persona da Cresci e Perdi?',
+        sub: 'Identifique o problema que afasta a persona majoritária.',
+        mensagem: 'A colaboradora designada para os vídeos é muito bem produzida — maquiagem pesada, roupas elegantes, linguagem sofisticada. Os vídeos ficam bonitos. Qual é o problema?',
+        opcoes: [
+          { letra: 'A', texto: 'Não há problema — quanto mais profissional, melhor a imagem da marca', certa: false },
+          { letra: 'B', texto: 'A apresentação muito sofisticada cria distância com a persona majoritária — a mãe que tem R$200/mês pensa "essa loja não é pra mim" e não vai, mesmo que os preços sejam acessíveis', certa: true },
+          { letra: 'C', texto: 'O problema é só estético — pode resolver com uma edição mais simples', certa: false },
+          { letra: 'D', texto: 'Não é um problema — depende do perfil de clientes da cidade', certa: false }
+        ],
+        feedback_certo: 'Correto! O manual exemplifica: "persona excessivamente produzida sinaliza para a cliente majoritária que ela não pertence àquele universo. O efeito é o contrário do desejado: afastamento." A persona precisa parecer alguém que a cliente encontraria na rua.',
+        feedback_errado: 'Persona muito sofisticada afasta a persona majoritária antes mesmo da visita. "A cliente pensa: essa loja nem entro, que já sei que é caro — mesmo que dentro haja dezenas de produtos no preço dela." A comunicação já sinalizou que não é para ela.',
+        resposta_sistema: 'O equilíbrio correto: uma pessoa real, bem apresentada, com energia positiva — que parece alguém que a cliente encontraria na rua e trocaria uma conversa sobre filhos. Nem excessivamente produzida (distância), nem descuidada (falta de credibilidade). O ponto-chave é identificação.'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Hipotético: como você explicaria para a franqueada a diferença entre admiração e identificação?',
+        sub: 'Ela entende que seus vídeos são bonitos mas não movem a loja. Escreva a explicação.',
+        mensagem: 'Franqueada: "Meus vídeos ficam lindos e têm muita visualização, mas a loja não lota. O que está errado?"',
+        campo_label: 'Sua explicação sobre admiração x identificação:',
+        campo_placeholder: 'Explique por que visualização sem identificação não gera movimento de loja...',
+        avaliacao_prompt: `marketing cresci perdi avaliando explicação sobre diferença entre admiração e identificação. Checar: explica que admiração gera curtidas mas não movimento, identificação é quando a cliente pensa 'sou como ela, esse produto é pra mim', menciona que vídeo bonito pode criar distância se não gerar identificação com a persona majoritária`,
+        resposta_sistema: 'Admiração é quando a cliente assiste e pensa "que lindo, que bonito". Identificação é quando ela pensa "essa pessoa entende minha realidade, esse produto é pra mim, vou lá". Só a identificação move a loja — admiração gera like, não visita. O vídeo precisa fazer a cliente se reconhecer, não admirar de longe. 🎯'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 10 — INAUGURAÇÃO: REUNIÃO PRÉ-INAUGURAÇÃO
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 10,
+    cliente: { nome: 'Reunião de Inauguração', origem: 'Processo de onboarding', avatar: 'RI', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Aprovação de Bastidor',
+        titulo: 'O bastidor chegou sem mostrar nenhum preço. Você aprova?',
+        sub: 'A franqueada enviou um vídeo de bastidor para aprovação.',
+        mensagem: 'A franqueada enviou um vídeo de 1 minuto mostrando várias peças de roupa, com narrativa animada e boa energia — mas sem mencionar nenhum preço em nenhum momento.',
+        opcoes: [
+          { letra: 'A', texto: 'Aprovar — boa energia e narrativa são suficientes para um bastidor', certa: false },
+          { letra: 'B', texto: 'Reprovar e pedir alteração — a narrativa ficou ótima, mas precisamos mostrar os preços de todas as iscas separadas na reunião', certa: true },
+          { letra: 'C', texto: 'Aprovar parcialmente para postagem orgânica apenas', certa: false },
+          { letra: 'D', texto: 'Aprovar mas pedir que adicione os preços na legenda do vídeo', certa: false }
+        ],
+        feedback_certo: 'Correto! A frase de alteração do manual: "A narrativa ficou ótima, mas precisamos mostrar os preços de todas as iscas que separamos na reunião." Preço no vídeo é obrigatório — é o argumento que move a persona.',
+        feedback_errado: 'O manual define: bastidores sem preço não cumprem a função. "A narrativa ficou ótima, mas precisamos mostrar os preços de todas as iscas." O preço é o argumento central que faz a persona decidir ir à loja.',
+        resposta_sistema: 'Frase de solicitação de alteração: "Arrasou na narrativa e na energia! Mas precisamos que o vídeo mostre os preços de todas as iscas que separamos na reunião — é o que faz o cliente decidir ir à loja. Pode regravar mostrando os preços claramente? 💚"'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Pós-Inauguração: Boas Práticas',
+        titulo: 'Qual das práticas é uma boa prática de redes sociais pós-inauguração?',
+        sub: 'Identifique o comportamento correto.',
+        mensagem: 'Na reunião pós-inauguração, qual das práticas abaixo está alinhada com as boas práticas da Cresci e Perdi?',
+        opcoes: [
+          { letra: 'A', texto: 'Gravar vídeos com trilha sonora animada para deixar o conteúdo mais dinâmico', certa: false },
+          { letra: 'B', texto: 'Gravar bastidores reais sem cortes e transições, com narrativa natural que cria conexão com a persona (mãe)', certa: true },
+          { letra: 'C', texto: 'Fazer vídeos com cortes rápidos e transições para parecer mais profissional', certa: false },
+          { letra: 'D', texto: 'Postar conteúdos mais elaborados e produzidos para diferenciar da concorrência', certa: false }
+        ],
+        feedback_certo: 'Correto! Bastidores reais, sem música, sem cortes — narrativa natural que cria conexão com a persona. O manual proíbe: música de fundo, cortes e transições, tendências, vídeos comerciais e robóticos.',
+        feedback_errado: 'O manual proíbe: música de fundo (fora do padrão), cortes e transições (não é o estilo), vídeos comerciais e robóticos. O bastidor deve ser "direto e real", com "narrativa atrativa para criar conexão com nossa persona que é a mãe".',
+        resposta_sistema: 'Boas práticas confirmadas: sem música, sem cortes, sem trends, sem vídeos comerciais. Bastidor real + narrativa que cria conexão + preços claros = o formato que funciona. A simplicidade autêntica converte mais do que a produção elaborada. ✅'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Escreva um script de bastidor de roupas marquinhas para inauguração',
+        sub: 'Usando a lógica de persona + preços das iscas definidas no manual.',
+        mensagem: 'Iscas de roupas marquinhas: body Carter\'s R$12 (R$10 GiraCrédito), macacão Carter\'s PLUSH R$28 (R$25 GiraCrédito), camisa Nike R$22 (R$18 GiraCrédito). Escreva o script.',
+        campo_label: 'Script do bastidor de roupas marquinhas:',
+        campo_placeholder: 'Escreva a fala do bastidor usando persona + preços definidos...',
+        avaliacao_prompt: `marketing cresci perdi avaliando script de bastidor de roupas marquinhas. Checar: usa narrativa de persona (situação de vida real de mãe), menciona os preços claramente, menciona pelo menos uma das marcas, usa tom próximo e não comercial, cria identificação com a persona majoritária`,
+        resposta_sistema: '"Gente, cadê as mamães melisseiras — digo, cartereiras! Olha o que chegou aqui. Body Carter\'s R$12 — R$10 no GiraCrédito. E esse macacão PLUSH? R$28. Eu levaria facilmente para a minha filha. Camisa Nike R$22. Isso é inauguração da Cresci e Perdi de [cidade], amanhã às [hora]. Vem cá!" 🎉'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 11 — HIPOTÉTICO: RACIOCÍNIO LIVRE DE MARKETING
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 11,
+    cliente: { nome: 'Situação Hipotética', origem: 'Treinamento avançado', avatar: 'HM', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Loja Destino',
+        titulo: 'Por que a Cresci e Perdi é uma loja destino?',
+        sub: 'Escolha a definição e a implicação correta.',
+        mensagem: 'A franqueada pergunta: "O que significa dizer que somos uma loja destino e por que isso muda como eu devo usar as redes sociais?"',
+        opcoes: [
+          { letra: 'A', texto: 'Loja destino significa que somos a melhor loja da cidade — então a comunicação deve focar em qualidade e status', certa: false },
+          { letra: 'B', texto: 'Loja destino significa que o cliente precisa decidir ir até a loja de propósito — não está no caminho de ninguém. As redes sociais são o único canal de convencimento antes da visita, então cada publicação precisa ser um argumento para justificar o deslocamento', certa: true },
+          { letra: 'C', texto: 'Loja destino significa que somos a loja favorita da persona — a comunicação pode ser mais casual', certa: false },
+          { letra: 'D', texto: 'Loja destino significa que temos localização privilegiada — não precisa se preocupar tanto com as redes', certa: false }
+        ],
+        feedback_certo: 'Correto! "Loja destino não existe no caminho de ninguém. O cliente precisa sair de onde está e ir até lá de propósito. As redes sociais são o único canal que faz esse convencimento acontecer antes da visita."',
+        feedback_errado: 'Loja destino = o cliente decide ir de propósito. As redes sociais são o único canal de convencimento antes da visita. "Se a rede social não for boa o suficiente para fazer o cliente sair de onde está, ela está falhando na sua função mais fundamental."',
+        resposta_sistema: 'A consequência direta: cada publicação é um argumento. Não é para aparecer — é para convencer. O vídeo precisa responder à pergunta que o cliente faz antes de sair de casa: "vale a pena o deslocamento?" Quando a resposta é sim, a loja lota. Quando é vaga, a loja fica vazia. 🎯'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Ciclo de Melhoria da Persona',
+        titulo: 'Como a franqueada deve melhorar sua persona ao longo do tempo?',
+        sub: 'Identifique o processo correto de evolução.',
+        mensagem: 'A franqueada está há 2 meses gravando vídeos mas sente que poderia melhorar. Como ela evolui?',
+        opcoes: [
+          { letra: 'A', texto: 'Contratar um profissional de marketing para gravar no lugar dela', certa: false },
+          { letra: 'B', texto: 'Analisar quais vídeos geraram mais visualizações, comentários e movimento de loja — e usar esses dados para refinar linguagem, testar produtos diferentes e experimentar aberturas distintas', certa: true },
+          { letra: 'C', texto: 'Investir em equipamentos melhores de gravação para aumentar a qualidade', certa: false },
+          { letra: 'D', texto: 'Copiar o estilo das lojas que mais engajam na rede', certa: false }
+        ],
+        feedback_certo: 'Correto! O ciclo de melhoria do manual: analisar quais vídeos geraram mais visualizações, comentários e movimento de loja — e usar isso para refinar. Não copiar — aprender com o que já foi testado e funcionou.',
+        feedback_errado: 'O ciclo de melhoria é baseado em dados da própria loja: o que gerou mais views, comentários, movimento. "Assista aos vídeos de outras unidades que estão gerando bons resultados — não para copiar, mas para aprender com o que já foi testado." Equipamento não é o problema.',
+        resposta_sistema: 'Ciclo de melhoria: publicar → observar o que gerou resultado (views + movimento de loja) → identificar o padrão → refinar linguagem, produto e abertura → publicar novamente. A persona não precisa ser perfeita desde o início — precisa evoluir. 📈'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Escrita Livre',
+        titulo: 'Hipotético: a loja tem muitas visualizações mas não converte em visitas. O que você analisa?',
+        sub: 'A franqueada tem 10k views por vídeo mas a loja não lota. Escreva sua análise.',
+        mensagem: 'Franqueada: "Meus vídeos têm muitas views mas a loja não lota. O que pode estar errado?"',
+        campo_label: 'Sua análise do problema:',
+        campo_placeholder: 'Analise os possíveis problemas de conversão: produto, preço, persona, narrativa...',
+        avaliacao_prompt: `marketing cresci perdi avaliando análise de problema de conversão. Checar: menciona pelo menos um dos possíveis problemas (produto fora do range da persona, preço não mencionado, persona não gera identificação, narrativa comercial sem situação de vida real, trends que atraem público errado), usa raciocínio lógico e não apenas lista`,
+        resposta_sistema: 'Análise: views sem visita geralmente indica um desses problemas: 1) Público errado — trends ou produtos caros atraem quem não é a persona. 2) Sem preço no vídeo — a persona não sabe se pode pagar. 3) Narrativa comercial — gera admiração, não identificação. 4) Persona desalinhada — sofisticada demais ou desalinhada com o perfil do cliente. O número 1 a verificar: quem está assistindo? Se não for mãe com filhos, o conteúdo está atraindo o público errado. 🎯'
+      }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CASO 12 — SITUAÇÃO COMPLEXA: MÚLTIPLOS ERROS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 12,
+    cliente: { nome: 'Revisão Completa', origem: 'Auditoria de conteúdo', avatar: 'RC', tipo: 'marketing' },
+    fases: [
+      {
+        tipo: 'triagem',
+        pill: 'Fase 1 — Auditoria de Feed',
+        titulo: 'Você analisou o feed da loja e encontrou esses problemas. Qual é o mais crítico?',
+        sub: 'Identifique o erro que mais impacta o resultado.',
+        mensagem: 'Feed da loja nos últimos 7 dias: (A) 4 vídeos com música de fundo, (B) 3 posts de produtos acima de R$150 com preço destacado, (C) 2 trends de TikTok, (D) nenhum vídeo com persona aparecendo — só mãos mostrando produtos.',
+        opcoes: [
+          { letra: 'A', texto: 'Os vídeos com música de fundo — impede o patrocínio', certa: false },
+          { letra: 'B', texto: 'Nenhum vídeo com persona aparecendo — vídeo sem rosto/voz humana não gera identificação, que é o mecanismo central de conversão', certa: true },
+          { letra: 'C', texto: 'As trends de TikTok — atraem público errado', certa: false },
+          { letra: 'D', texto: 'Produtos caros com preço destacado — cria barreira de preço', certa: false }
+        ],
+        feedback_certo: 'Correto! Todos são erros, mas o mais crítico é a ausência de persona. "Vídeo sem persona funcional é dinheiro desperdiçado e oportunidade perdida." Sem rosto e voz humana que gerem identificação, nenhum dos outros ajustes vai funcionar.',
+        feedback_errado: 'Todos são erros, mas a ausência de persona é o mais crítico: sem identificação, nenhum outro ajuste funciona. Música e trends são problemas sérios, mas se tiver persona forte, ainda converte. Sem persona, não converte independente do resto.',
+        resposta_sistema: 'Prioridade de correção: 1️⃣ Persona (urgente — sem isso nada funciona) 2️⃣ Trends de TikTok (público errado) 3️⃣ Música de fundo (impede patrocínio) 4️⃣ Produtos caros com preço (estratégia de uso como isca). Cada erro tem peso diferente — comece pelo que impede a identificação.'
+      },
+      {
+        tipo: 'resposta',
+        pill: 'Fase 2 — Plano de Correção',
+        titulo: 'Como você prioriza a correção com a franqueada?',
+        sub: 'Ela tem tempo limitado. O que você manda ela fazer primeiro?',
+        mensagem: 'A franqueada diz: "Entendi os erros. Mas tenho só 2 horas hoje. O que faço primeiro?"',
+        opcoes: [
+          { letra: 'A', texto: 'Deletar todos os posts com erros e começar do zero amanhã', certa: false },
+          { letra: 'B', texto: 'Gravar hoje um vídeo de bastidor com persona aparecendo + preço + narrativa de identificação — e publicar. Uma publicação certa hoje vale mais do que planejar mudar tudo amanhã', certa: true },
+          { letra: 'C', texto: 'Fazer um planejamento completo dos próximos 30 dias de conteúdo', certa: false },
+          { letra: 'D', texto: 'Remover apenas os vídeos com trends que atraem o público errado', certa: false }
+        ],
+        feedback_certo: 'Correto! Uma publicação com persona + preço + narrativa hoje já começa a corrigir o problema mais crítico. Planejamento é importante, mas uma ação concreta imediata tem mais valor do que perfeição futura.',
+        feedback_errado: 'Com 2 horas: uma publicação certa hoje tem mais impacto do que apagar tudo ou planejar demais. Começar com persona + preço + narrativa de identificação é o primeiro passo concreto. Posts ruins do passado podem ser arquivados depois, sem urgência.',
+        resposta_sistema: 'Plano de 2 horas: 1) Separe 2-3 produtos dentro do range da persona (até R$25-30). 2) Grave um bastidor de 1 minuto com você aparecendo, narrativa de situação de vida real da mãe e preço claro. 3) Publique. Isso já corrige o erro mais crítico. Amanhã ajustamos o resto! ✅'
+      },
+      {
+        tipo: 'escrita',
+        pill: 'Fase 3 — Reflexão Final',
+        titulo: 'Qual é a regra de ouro que resume tudo que aprendeu sobre marketing na Cresci e Perdi?',
+        sub: 'Em uma única frase ou parágrafo, sintetize o princípio central do marketing da rede.',
+        mensagem: '[Coordenador de marketing:] "Se você tivesse que resumir em uma frase o princípio central do nosso marketing, qual seria?"',
+        campo_label: 'Sua regra de ouro:',
+        campo_placeholder: 'Escreva o princípio central que guia todo o marketing da Cresci e Perdi...',
+        avaliacao_prompt: `marketing cresci perdi avaliando síntese do princípio central de marketing. Checar: menciona a persona (mãe com filhos), a identificação como mecanismo central, o objetivo de mover a cliente da inércia para a ação, ou a loja destino que precisa justificar o deslocamento. A resposta deve demonstrar compreensão profunda, não apenas listar regras`,
+        resposta_sistema: 'Regra de ouro: cada publicação é um argumento para uma mãe específica, com um orçamento específico, para justificar um deslocamento que ela não precisa fazer. Quando ela assiste e pensa "isso é pra mim, eu consigo comprar, essa pessoa entende o que eu vivo" — a loja lota. Quando ela pensa "bonito, mas não é pra mim" — a loja fica vazia. Tudo que fazemos é para chegar nesse primeiro pensamento. 🎯'
+      }
+    ]
+  }
+
+]; // fim CASOS
+
+
+// ─── ESTADO ───────────────────────────────────────────────────────────────
+const TOTAL_CASOS = 12;
+let nomeColaborador = '';
+let casoAtual = 0;
+let faseAtual = 0;
+let acertosTotais = 0;
+let errosTotais = 0;
+let pontosTotais = 0;
+let resultadosPorCaso = [];
+let pontosNoCaso = 0;
+let acertosNoCaso = 0;
+let respostasEscrita = [];
+
+// ─── INICIAR ──────────────────────────────────────────────────────────────
+function iniciarSimulador() {
+  const nome = document.getElementById('input-nome').value.trim();
+  if (!nome) { document.getElementById('erro-nome').style.display = 'block'; return; }
+  nomeColaborador = nome;
+  document.getElementById('tela-inicio').style.display = 'none';
+  document.getElementById('tela-simulador').style.display = 'block';
+  document.getElementById('sim-nome').textContent = nome;
+  document.getElementById('sim-caso-num').textContent = '1';
+  carregarCaso();
+}
+
+// ─── CARREGAR CASO ────────────────────────────────────────────────────────
+function carregarCaso() {
+  const caso = CASOS[casoAtual];
+  faseAtual = 0; pontosNoCaso = 0; acertosNoCaso = 0;
+  document.getElementById('sim-caso-num').textContent = casoAtual + 1;
+  document.getElementById('barra-fill').style.width = `${(casoAtual / TOTAL_CASOS) * 100}%`;
+  document.getElementById('chat-avatar').textContent = caso.cliente.avatar;
+  document.getElementById('chat-nome-franqueado').textContent = caso.cliente.nome;
+  document.getElementById('chat-cidade').textContent = caso.cliente.origem;
+  document.getElementById('chat-mensagens').innerHTML = '';
+  setTimeout(() => {
+    adicionarMensagem(caso.fases[0].mensagem, 'franqueado');
+    setTimeout(() => carregarFase(), 800);
+  }, 400);
+}
+
+// ─── CARREGAR FASE ────────────────────────────────────────────────────────
+function carregarFase() {
+  const caso = CASOS[casoAtual];
+  const fase = caso.fases[faseAtual];
+  document.getElementById('fase-pill').textContent = fase.pill;
+  document.getElementById('decisao-titulo').textContent = fase.titulo;
+  document.getElementById('decisao-sub').textContent = fase.sub;
+  document.getElementById('feedback-box').style.display = 'none';
+  document.getElementById('btn-proximo').style.display = 'none';
+  const lista = document.getElementById('opcoes-lista');
+  lista.innerHTML = '';
+
+  if (fase.tipo === 'escrita') {
+    lista.innerHTML = `
+      <div style="margin-bottom:.5rem;">
+        <label style="display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--texto2);margin-bottom:.5rem;">${fase.campo_label}</label>
+        <textarea id="campo-escrita" placeholder="${fase.campo_placeholder}"
+          style="width:100%;min-height:130px;padding:.85rem 1rem;background:var(--escuro3);border:1.5px solid var(--borda);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--texto);resize:vertical;outline:none;line-height:1.55;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--verde-claro)'" onblur="this.style.borderColor='var(--borda)'"></textarea>
+      </div>
+      <button onclick="avaliarEscrita()" id="btn-avaliar"
+        style="width:100%;padding:.85rem;background:var(--verde);color:white;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;">
+        ✦ Avaliar Resposta →
+      </button>
+      <div id="ia-status" style="text-align:center;font-size:.78rem;color:var(--texto2);margin-top:.5rem;display:none;">⏳ Analisando...</div>`;
+  } else {
+    const letras = ['A','B','C','D'];
+    fase.opcoes.forEach((op, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opcao-btn';
+      btn.onclick = () => responderOpcao(i);
+      btn.innerHTML = `<div class="opcao-letra">${letras[i]}</div><span>${op.texto}</span>`;
+      lista.appendChild(btn);
+    });
+  }
+}
+
+// ─── RESPONDER MÚLTIPLA ESCOLHA ───────────────────────────────────────────
+function responderOpcao(idx) {
+  const caso = CASOS[casoAtual];
+  const fase = caso.fases[faseAtual];
+  const opcoes = document.querySelectorAll('.opcao-btn');
+  opcoes.forEach(b => b.disabled = true);
+  const acertou = fase.opcoes[idx].certa;
+  opcoes.forEach((btn, i) => {
+    if (fase.opcoes[i].certa) {
+      if (i === idx && acertou) btn.classList.add('certa');
+      else if (!acertou) btn.classList.add('mostrar-certa');
+    }
+    if (i === idx && !acertou) btn.classList.add('errada');
+  });
+  registrarResultado(acertou, 10);
+  const fb = document.getElementById('feedback-box');
+  fb.className = `feedback-box ${acertou ? 'certo' : 'errado'}`;
+  fb.style.display = 'block';
+  document.getElementById('feedback-titulo').innerHTML = acertou
+    ? `✓ Correto! <span class="pontos-flash mais">+10 pts</span>`
+    : `✗ Resposta incorreta <span class="pontos-flash zero">+0 pts</span>`;
+  document.getElementById('feedback-texto').textContent = acertou ? fase.feedback_certo : fase.feedback_errado;
+  setTimeout(() => adicionarMensagem(fase.resposta_sistema, 'sistema'), 600);
+  setTimeout(() => { document.getElementById('btn-proximo').style.display = 'block'; }, 800);
+}
+
+// ─── AVALIAR ESCRITA LOCAL ────────────────────────────────────────────────
+function avaliarEscrita() {
+  const resposta = (document.getElementById('campo-escrita')?.value || '').trim();
+  if (!resposta) { alert('Escreva sua resposta antes de avaliar!'); return; }
+  const caso = CASOS[casoAtual];
+  const fase = caso.fases[faseAtual];
+  document.getElementById('btn-avaliar').disabled = true;
+  document.getElementById('campo-escrita').disabled = true;
+  document.getElementById('ia-status').style.display = 'block';
+  setTimeout(() => {
+    const r = resposta.toLowerCase();
+    const palavras = resposta.trim().split(/\s+/).length;
+    const tamOk = palavras >= 20;
+    const proibidas = ['não sei','não posso','não é meu','problema seu','boa sorte'];
+    const temProibida = proibidas.some(p => r.includes(p));
+    const chaves = extrairChaves(fase.avaliacao_prompt);
+    const acertosChaves = chaves.filter(c => r.includes(c.toLowerCase()));
+    const pctChaves = chaves.length > 0 ? acertosChaves.length / chaves.length : 0.5;
+    const girias = ['vc','tb','pq','msm','blz','vlw','hj'];
+    const temGiria = girias.some(p => r.includes(p));
+    const muitosMaius = (resposta.match(/[A-ZÁÉÍÓÚÃÕ]{3,}/g) || []).length > 3;
+
+    let pts_c = tamOk ? 7 : 4;
+    if (pctChaves >= 0.5) pts_c = Math.min(10, pts_c + 2);
+    if (pctChaves >= 0.8) pts_c = 10;
+    if (temProibida) pts_c = Math.max(2, pts_c - 3);
+    let pts_t = 8;
+    if (temProibida) pts_t -= 3;
+    if (palavras < 15) pts_t -= 2;
+    let pts_p = 8;
+    if (temGiria) pts_p -= 3;
+    if (muitosMaius) pts_p -= 2;
+    if (!tamOk) pts_p -= 1;
+
+    const media = ((pts_c + pts_t + pts_p) / 3).toFixed(1);
+    const acertou = parseFloat(media) >= 6;
+    registrarResultado(acertou, acertou ? 10 : 0);
+
+    let feedbacks = [];
+    if (!tamOk) feedbacks.push('Resposta curta — desenvolva mais o raciocínio.');
+    if (temProibida) feedbacks.push('Evite respostas que deixam o franqueado sem saída.');
+    if (temGiria) feedbacks.push('Atenção ao tom profissional — evite abreviações.');
+    if (pctChaves >= 0.5 && !feedbacks.length) feedbacks.push('Boa resposta! Contém os pontos essenciais esperados.');
+    if (!feedbacks.length) feedbacks.push('Resposta dentro do esperado para esta situação.');
+
+    respostasEscrita.push({ caso: casoAtual+1, fase: faseAtual+1, texto: resposta, nota: media, aprovado: acertou });
+
+    const fb = document.getElementById('feedback-box');
+    fb.className = `feedback-box ${acertou ? 'certo' : 'errado'}`;
+    fb.style.display = 'block';
+    document.getElementById('feedback-titulo').innerHTML = acertou
+      ? `✓ Aprovado! <span class="pontos-flash mais">+10 pts</span>`
+      : `✗ Precisa melhorar <span class="pontos-flash zero">+0 pts</span>`;
+    document.getElementById('feedback-texto').innerHTML = `
+      <div style="display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,.08);padding:.2rem .6rem;border-radius:6px;font-size:.75rem;">Conteúdo: ${pts_c}/10</span>
+        <span style="background:rgba(255,255,255,.08);padding:.2rem .6rem;border-radius:6px;font-size:.75rem;">Tom: ${pts_t}/10</span>
+        <span style="background:rgba(255,255,255,.08);padding:.2rem .6rem;border-radius:6px;font-size:.75rem;">Português: ${pts_p}/10</span>
+        <span style="background:rgba(255,255,255,.08);padding:.2rem .6rem;border-radius:6px;font-size:.75rem;font-weight:700;">Média: ${media}/10</span>
+      </div>
+      <div style="font-size:.83rem;">${feedbacks.join(' ')}</div>
+      <div style="font-size:.75rem;color:var(--texto2);margin-top:.4rem;">📋 Salvo para revisão do gestor.</div>`;
+    document.getElementById('ia-status').style.display = 'none';
+    setTimeout(() => adicionarMensagem(fase.resposta_sistema, 'sistema'), 600);
+    setTimeout(() => { document.getElementById('btn-proximo').style.display = 'block'; }, 800);
+  }, 800);
+}
+
+function extrairChaves(prompt) {
+  const buscar = [
+    'persona','identificação','narrativa','persona','preço','bastidor','produto',
+    'inauguração','troca','desapego','avatar','simultane','persona','economia',
+    'calçado','criança','mãe','ciclo','marca','pix','giracredito','marca',
+    'loja destino','admira','converte','tráfego','isca','range'
+  ];
+  const chaves = [];
+  buscar.forEach(c => { if (prompt.toLowerCase().includes(c) && !chaves.includes(c)) chaves.push(c); });
+  return chaves.slice(0, 6);
+}
+
+// ─── REGISTRAR RESULTADO ──────────────────────────────────────────────────
+function registrarResultado(acertou, pontos) {
+  if (acertou) { acertosTotais++; acertosNoCaso++; pontosTotais += pontos; pontosNoCaso += pontos; }
+  else { errosTotais++; }
+  document.getElementById('placar-acertos').textContent = acertosTotais;
+  document.getElementById('placar-erros').textContent = errosTotais;
+  document.getElementById('placar-pontos').textContent = pontosTotais;
+}
+
+// ─── PRÓXIMA FASE ─────────────────────────────────────────────────────────
+function proximaFase() {
+  const caso = CASOS[casoAtual];
+  faseAtual++;
+  if (faseAtual >= caso.fases.length) {
+    resultadosPorCaso.push({ nome: caso.cliente.nome, origem: caso.cliente.origem, acertos: acertosNoCaso, pontos: pontosNoCaso });
+    casoAtual++;
+    if (casoAtual >= CASOS.length) { mostrarResultado(); }
+    else {
+      document.getElementById('btn-proximo').style.display = 'none';
+      document.getElementById('feedback-box').style.display = 'none';
+      setTimeout(carregarCaso, 300);
+    }
+    return;
+  }
+  document.getElementById('btn-proximo').style.display = 'none';
+  document.getElementById('feedback-box').style.display = 'none';
+  setTimeout(() => {
+    adicionarMensagem(caso.fases[faseAtual].mensagem, 'franqueado');
+    setTimeout(() => carregarFase(), 600);
+  }, 300);
+}
+
+// ─── CHAT HELPERS ─────────────────────────────────────────────────────────
+function adicionarMensagem(texto, tipo) {
+  const caso = CASOS[casoAtual];
+  const chat = document.getElementById('chat-mensagens');
+  if (tipo === 'franqueado') {
+    const el = document.createElement('div');
+    el.className = 'msg franqueado';
+    el.innerHTML = `<div class="msg-avatar">${caso.cliente.avatar}</div><div><div class="msg-balao">${texto}</div><div class="msg-hora">${horaAtual()}</div></div>`;
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+  } else {
+    const digit = document.createElement('div');
+    digit.className = 'msg sistema'; digit.id = 'digitando';
+    digit.innerHTML = `<div class="msg-avatar" style="background:var(--verde);">M</div><div class="msg-balao"><div class="digitando"><span></span><span></span><span></span></div></div>`;
+    chat.appendChild(digit); chat.scrollTop = chat.scrollHeight;
+    setTimeout(() => {
+      const d = document.getElementById('digitando'); if (d) d.remove();
+      const el = document.createElement('div'); el.className = 'msg sistema';
+      el.innerHTML = `<div class="msg-avatar" style="background:var(--verde);">M</div><div><div class="msg-balao">${texto}</div><div class="msg-hora" style="text-align:right">${horaAtual()}</div></div>`;
+      chat.appendChild(el); chat.scrollTop = chat.scrollHeight;
+    }, 1200);
+  }
+}
+
+function horaAtual() {
+  const n = new Date();
+  return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
+
+// ─── RESULTADO FINAL ──────────────────────────────────────────────────────
+function mostrarResultado() {
+  document.getElementById('tela-simulador').style.display = 'none';
+  document.getElementById('tela-resultado').style.display = 'block';
+  const totalPossivel = TOTAL_CASOS * 30;
+  const pct = Math.round((pontosTotais / totalPossivel) * 100);
+  document.getElementById('res-nota').textContent = `${pontosTotais}/${totalPossivel}`;
+  document.getElementById('res-acertos').textContent = acertosTotais;
+  document.getElementById('res-erros').textContent = errosTotais;
+  document.getElementById('res-pontos').textContent = `${pct}%`;
+
+  let cls, icone, titulo, sub, msg;
+  if (pct >= 70) {
+    cls='aprovado'; icone='🎯'; titulo='Simulação Aprovada!';
+    sub='Desempenho registrado. Encaminhe para revisão do gestor.';
+    msg=`<strong>${nomeColaborador}</strong>, você demonstrou domínio dos conceitos de persona, bastidores, inauguração, troca de coleção e desapego. Suas decisões estão alinhadas com os padrões da rede. O gestor vai revisar as fases de escrita e definir os próximos passos. Bem-vindo(a) à equipe!`;
+  } else if (pct >= 50) {
+    cls='medio'; icone='📋'; titulo='Resultado Regular';
+    sub='Há pontos para reforçar antes de atuar de forma autônoma.';
+    msg=`<strong>${nomeColaborador}</strong>, você passou pela simulação, mas há decisões que precisam ser revisadas — especialmente persona, tom do desapego e calendário de coleção. O gestor vai indicar os módulos para reler.`;
+  } else {
+    cls='reprovado'; icone='📚'; titulo='Precisa Reforçar';
+    sub='Releia os manuais e refaça o simulador.';
+    msg=`<strong>${nomeColaborador}</strong>, o resultado indica que alguns conceitos precisam ser consolidados. O gestor vai identificar os módulos prioritários para revisão. Refaça após o reforço!`;
+  }
+
+  document.getElementById('res-icone').textContent = icone;
+  document.getElementById('res-titulo').textContent = titulo;
+  document.getElementById('res-sub').textContent = sub;
+  document.getElementById('res-nota').className = `nota-grande ${cls}`;
+  document.getElementById('res-pill').textContent = cls==='aprovado' ? '✓ Aprovado(a)' : cls==='medio' ? '⚠ Regular' : '✗ Reforço necessário';
+  document.getElementById('res-pill').className = cls;
+  document.getElementById('msg-gestor').innerHTML = msg;
+
+  const lista = document.getElementById('breakdown-lista');
+  lista.innerHTML = '';
+  resultadosPorCaso.forEach((r, i) => {
+    const linha = document.createElement('div'); linha.className = 'caso-linha';
+    const stars = [0,1,2].map(j => `<div class="star ${j < r.acertos ? 'cheia' : 'vazia'}"></div>`).join('');
+    linha.innerHTML = `<div class="caso-nome">Caso ${i+1} — ${r.nome.split(' ').slice(0,2).join(' ')}</div><div class="caso-stars">${stars}</div><div class="pontos-caso">${r.pontos}/30</div>`;
+    lista.appendChild(linha);
+  });
+
+  try {
+    const chave = 'cresci_simulador_mkt_resultados';
+    const ex = JSON.parse(localStorage.getItem(chave) || '[]');
+    ex.push({ nome: nomeColaborador, data: new Date().toISOString(), pontos: pontosTotais, total: totalPossivel, acertos: acertosTotais, erros: errosTotais, percentual: pct, por_caso: resultadosPorCaso, respostas_escritas: respostasEscrita });
+    localStorage.setItem(chave, JSON.stringify(ex));
+  } catch(e) {}
+}
+</script>
+</body>
+</html>
